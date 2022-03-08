@@ -12,11 +12,14 @@ pipeline{
               stage('Quality Gate Status Check'){
                   steps{
                       script{
-			      withSonarQubeEnv('sonarqube') { 
-			      sh "mvn clean sonar:sonar" \
-			      -D sonar.login=admin \
-      			      -D sonar.password=admin
-                       	     	}
+    			withSonarQubeEnv('sonarqube') {
+      				sh "mvn clean sonar:sonar \
+      				-D sonar.login=admin \
+      				-D sonar.password=admin \
+      				-D sonar.projectKey=sonar-jenkins \
+      				-D sonar.exclusions=vendor/**,resources/**,**/*.java \
+      				-D sonar.host.url=http://54.242.167.180:9000/"
+    			}
 			      timeout(time: 1, unit: 'HOURS') {
 			      def qg = waitForQualityGate()
 				      if (qg.status != 'OK') {
