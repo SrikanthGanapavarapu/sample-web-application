@@ -13,7 +13,9 @@ pipeline{
                   steps{
                       script{
 			      withSonarQubeEnv('sonarqube') { 
-			      sh "mvn clean sonar:sonar"
+			      sh "mvn clean sonar:sonar" \
+			      -D sonar.login=admin \
+      			      -D sonar.password=admin
                        	     	}
 			      timeout(time: 1, unit: 'HOURS') {
 			      def qg = waitForQualityGate()
